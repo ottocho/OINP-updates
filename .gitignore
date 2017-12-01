@@ -3,6 +3,9 @@ __pycache__/
 *.py[cod]
 *$py.class
 
+# database of fetched data
+db/
+
 # C extensions
 *.so
 
