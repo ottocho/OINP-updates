@@ -29,6 +29,15 @@ mkdir db private
 # put SendGrid key in file
 echo 'YOUR_SEND_GRID_KEY' > private/SG_API_KEY
 
+# put send email address in file
+echo 'SEND_EMAIL@z.com' > private/SENDER
+
+# put receiver email address in file
+echo 'RECVER_EMAIL@z.com' > private/RECVER
+
+# put debugger(developer) email address in file
+echo 'DEBUGGER_EMAIL@z.com' > private/DEBUGGER
+
 # run
 ./main.py
 ```
@@ -44,3 +53,11 @@ echo 'YOUR_SEND_GRID_KEY' > private/SG_API_KEY
 ### Dec. 1 2017
 
 first stable version
+
+### Dec. 5 2017
+
+fix the email config error
+
+### Dec. 25 2017
+
+send debug information to debugger email

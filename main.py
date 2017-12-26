@@ -22,7 +22,7 @@ from collections import defaultdict
 import requests
 from bs4 import BeautifulSoup
 
-from send_mail import send_mail
+from send_mail import send_mail, send_debug
 
 ''' dir to store data '''
 DIR = 'db/'
@@ -213,7 +213,7 @@ if __name__ == '__main__':
             html = EMAIL_PREFIX + html
             subject = 'ERROR: Ontario Immigrant Nominee Program '
             print(subject, html)
-            send_mail(subject, html)
+            send_debug(subject, html)
             n = 0
 
         # store timeout time
@@ -228,4 +228,4 @@ if __name__ == '__main__':
         html = EMAIL_PREFIX + html
         subject = 'ERROR: Ontario Immigrant Nominee Program '
         print(subject, exs)
-        send_mail(subject, html)
+        send_debug(subject, html)
