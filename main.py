@@ -196,7 +196,7 @@ if __name__ == '__main__':
     try:
         main()
 
-    except requests.exceptions.Timeout:
+    except (requests.exceptions.Timeout, requests.exceptions.ContentDecodingError):
         print('time out')
 
         n = 1
