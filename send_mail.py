@@ -21,11 +21,20 @@ SENDER_FILE = 'private/SENDER'
 RECVER_FILE = 'private/RECVER'
 DEBUGGER_FILE = 'private/DEBUGGER'
 
+def get_email_lines(filename):
+    '''
+    get email list from file
+    '''
+    with open(filename) as fobj:
+        rs = [ i.strip() for i in fobj.read().split('\n') ]
+        rs = [ i for i in rs if i and not i.startswith('#') ]
+        return rs
+
 def send_mail(subject, html):
     # get config
     apikey = open(SG_KEY_FILE).read().strip()
     sender_email = open(SENDER_FILE).read().strip()
-    rs = [ i.strip() for i in open(RECVER_FILE).read().split() ]
+    rs = get_email_lines(RECVER_FILE)
 
     for recver_email in rs:
         # api send
@@ -61,4 +70,5 @@ def send_debug(subject, html):
 if __name__ == '__main__':
     subject = 'UPDATE! Ontario Immigrant Nominee Program'
     html = '<p><strong>test mail</strong></p>'
-    send_debug(subject, html)
+    send_mail(subject, html)
+    # send_debug(subject, html)
