@@ -103,7 +103,7 @@ def get_main_part():
     soup = BeautifulSoup(html, 'html5lib')
 
     main_div = soup.find_all(class_="main_content")[0]
-    lines = main_div.find_all(("h1", "p"))
+    lines = main_div.find_all(("h1", "p", "ul"))
     return lines
 
 def parse():
