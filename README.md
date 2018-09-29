@@ -1,12 +1,10 @@
 # OINP-updates
 
-Send email when Ontario Immigrant Nominee Program Updates.
-
-[Ontario Canada: Ontario Immigrant Nominee Program Updates](http://www.ontarioimmigration.ca/en/pnp/OI_PNPNEW.html)
+To send email for updates from [Ontario Immigrant Nominee Program](http://www.ontarioimmigration.ca/en/pnp/OI_PNPNEW.html).
 
 ## deploy
 
-Simply deploy on the home directory of your server.
+Simply deploy on the home directory of your server and serve by crontab.
 
 Using [SendGrid](https://sendgrid.com/) to send email.
 
@@ -20,10 +18,10 @@ pip3 install beautifulsoup4 requests html5lib sendgrid
 cd ~
 
 # clone repo
-git clone https://github.com/ottocho/onipu
+git clone https://github.com/ottocho/OINP-updates
 
 #
-cd onipu
+cd OINP-updates
 
 #
 mkdir db private
@@ -47,7 +45,7 @@ echo 'DEBUGGER_EMAIL@z.com' > private/DEBUGGER
 ## on cron
 
 ```
-24 * * * * cd /home/otto_cho/onipu/ && python3 main.py >>run.log 2>&1
+24 * * * * cd /home/otto_cho/OINP-updates/ && python3 main.py >>run.log 2>&1
 ```
 
 ## changes
