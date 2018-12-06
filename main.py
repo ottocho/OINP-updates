@@ -69,8 +69,7 @@ M2D = {
 
 
 ''' user agent to pretend normal user '''
-UA = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/62.0.3202.94 Safari/537.36'
-
+UA = 'Mozilla/5.0 (Windows NT 5.1; rv:7.0.1) Gecko/20100101 Firefox/7.0.1'
 
 def try_release_line(l):
     '''
@@ -85,7 +84,7 @@ def try_release_line(l):
     (?P<month>Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Sept|Oct|Nov|Dec
               |January|February|March|April|May|June|July|August
               |September|October|November|December)\.?[ ]+          # month
-    (?P<day>[0-9]+)(?:st|rd|th|ST|RD|TH)?,?[ ]+                     # day
+    (?P<day>[0-9]+)(?:st|nd|rd|th|ST|ND|RD|TH)?,?[ ]+               # day
     (?P<year>20[21][67890])                                         # year
     '''
     rk = re.compile(PTN, re.VERBOSE)
