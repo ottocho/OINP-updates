@@ -76,16 +76,18 @@ def try_release_line(l):
     '''
     each news MAY be started with a line with date underlined.
     use this line to be the starter of one news
-    '''
-    teststr = '<p><strong><span style=" text-decoration: underline;">November 9, 2017</span></strong></p>'
 
+    indicated line:
+    '<p><strong><span style=" text-decoration: underline;">December 6th, 2018</span></strong></p>'
+    '''
     PTN = r'''
-    style="[ ]+text-decoration[ ]*:[ ]*underline.+>                                                         # prefix
-    (?P<month>Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Sept|Oct|Nov|Dec|January|February|March|April|May|June|July|August|September|October|November|December)\.?[ ]+    # month
-    (?P<day>[0-9]+),[ ]+                                                                                    # day
-    (?P<year>201[678])                                                                                      # year
+    style="[ ]+text-decoration[ ]*:[ ]*underline.+>                 # prefix
+    (?P<month>Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Sept|Oct|Nov|Dec
+              |January|February|March|April|May|June|July|August
+              |September|October|November|December)\.?[ ]+          # month
+    (?P<day>[0-9]+)(?:st|rd|th|ST|RD|TH)?,?[ ]+                     # day
+    (?P<year>20[21][67890])                                         # year
     '''
-
     rk = re.compile(PTN, re.VERBOSE)
     t = rk.findall(l)
     return t

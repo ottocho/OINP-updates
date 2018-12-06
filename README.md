@@ -45,7 +45,7 @@ echo 'DEBUGGER_EMAIL@z.com' > private/DEBUGGER
 ## on cron
 
 ```
-24 * * * * cd /home/otto_cho/OINP-updates/ && python3 main.py >>run.log 2>&1
+*/5 *  *   *   *    cd /home/otto_cho/OINP-updates/ && TZ='America/New_York' python3 main.py >>run.log 2>&1
 ```
 
 ## changes
@@ -61,3 +61,8 @@ fix the email config error
 ### Dec. 25 2017
 
 send debug information to debugger email
+
+### Dec. 06 2018
+
+fix datetime bug
+
