@@ -22,15 +22,21 @@ from bs4 import BeautifulSoup
 
 from send_mail import send_mail, send_debug
 
+YEAR = datetime.datetime.now().year
+
+NEW_URL = 'https://www.ontario.ca/page/%d-ontario-immigrant-nominee-program-updates' % YEAR
+EMAIL_PREFIX = '<p><a target="_blank" href="%s">%s</a></p>' % (URL, URL)
+
 ''' dir to store data '''
 DIR = 'db/'
 ''' history data '''
 LAST_JS = DIR + '/' + 'last.json'
 
 ''' data source URL '''
+_HOST = 'api.ontario.ca'
+_PATH = '/api/drupal/page%%2F%d-ontario-immigrant-nominee-program-updates' % YEAR
 _GET_PARAMS = 'fields=nid,field_body_beta,body'
-DATA_SOURCE_URL = 'https://api.ontario.ca/api/drupal/page%%2F%d-ontario-immigrant-nominee-program-updates?%s' \
-    % (datetime.datetime.now().year, _GET_PARAMS)
+DATA_SOURCE_URL = 'https://%s/%s?%s' % (_HOST, _PATH, _GET_PARAMS)
 
 ''' http timeout '''
 TIMEOUT = 15
@@ -108,9 +114,7 @@ def get_main_part():
         'Accept': '*/*',
         'Content-Encoding': 'gzip',
     }
-    print(DATA_SOURCE_URL)
     html = requests.get(DATA_SOURCE_URL, timeout=TIMEOUT, headers=headers).content
-    print(html)
     soup = BeautifulSoup(html, 'html5lib')
     return soup.body.children
 
