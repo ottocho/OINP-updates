@@ -3,13 +3,11 @@
 
 """
 Author:       ottocho
-Filename:     fetch_update.py
+Filename:     OINP-updates/main.py
 Date:         2017-11-14 21:10
 Description:
-
     HTTP request and split out the part of the lastest update of ONIP
     send email if new ONIP update
-
 """
 
 import os
@@ -26,19 +24,19 @@ from send_mail import send_mail, send_debug
 
 ''' dir to store data '''
 DIR = 'db/'
+''' history data '''
+LAST_JS = DIR + '/' + 'last.json'
 
-''' target '''
-URL = 'http://www.ontarioimmigration.ca/en/pnp/OI_PNPNEW.html'
-EMAIL_PREFIX = '<p><a target="_blank" href="%s">%s</a></p>' % (URL, URL)
-
+''' data source URL '''
+_GET_PARAMS = 'fields=nid,field_body_beta,body'
+DATA_SOURCE_URL = 'https://api.ontario.ca/api/drupal/page%%2F%d-ontario-immigrant-nominee-program-updates?%s' \
+    % (datetime.datetime.now().year, _GET_PARAMS)
 
 ''' http timeout '''
 TIMEOUT = 15
 TIMEOUT_THRES = 500 # send email if timeout too much
 TIMEOUT_REC = DIR + '/' + 'timeout.json'
 
-''' history data '''
-LAST_JS = DIR + '/' + 'last.json'
 M2D = {
     "January": 1,
     "February": 2,
@@ -67,80 +65,88 @@ M2D = {
     "Dec": 12,
 }
 
-
-''' user agent to pretend normal user '''
-UA = 'Mozilla/5.0 (Windows NT 5.1; rv:7.0.1) Gecko/20100101 Firefox/7.0.1'
-
-def try_release_line(l):
+def parse_date_title(l):
     '''
-    each news MAY be started with a line with date underlined.
     use this line to be the starter of one news
-
-    indicated line:
-    '<p><strong><span style=" text-decoration: underline;">December 6th, 2018</span></strong></p>'
+    indicated line: `December 6th, 2018`
     '''
+    if not l:
+        return l
     PTN = r'''
-    style="[ ]+text-decoration[ ]*:[ ]*underline.+>                 # prefix
     (?P<month>Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Sept|Oct|Nov|Dec
               |January|February|March|April|May|June|July|August
               |September|October|November|December)\.?[ ]+          # month
-    (?P<day>[0-9]+)(?:st|nd|rd|th|ST|ND|RD|TH)?,?[ ]+               # day
+    (?P<day>[0-9]+)(?:st|nd|rd|th|ST|ND|RD|TH)?[ ]*,?[ ]*           # day
     (?P<year>20[21][67890])                                         # year
     '''
     rk = re.compile(PTN, re.VERBOSE)
     t = rk.findall(l)
-    return t
+    if len(t) == 0:
+        return
+    _dm, dd, dy = t[0]
+    dm = M2D[_dm]
+    return (dm, dd, dy)
+
+''' user agent to pretend normal user '''
+USER_AGENT = 'Mozilla/5.0 (Windows NT 5.1; rv:7.0.1) Gecko/20100101 Firefox/7.0.1'
 
 def get_main_part():
     '''
-    get the main part of the news website and return the list of `h1` and `p`(content)
+    get the main part of the news website
     '''
+    # FIXME testing
+    '''
+    with open('./jj.json') as fobj:
+        value = json.loads(fobj.read())
+        content = value['body']['und'][0]['safe_value']
+        soup = BeautifulSoup(content, 'html5lib')
+        return soup.body.children
+    '''
+
     headers = {
-        'User-Agent': UA,
+        'User-Agent': USER_AGENT,
         'Accept': '*/*',
         'Content-Encoding': 'gzip',
     }
-    html = requests.get(URL, timeout=TIMEOUT, headers=headers).content
+    print(DATA_SOURCE_URL)
+    html = requests.get(DATA_SOURCE_URL, timeout=TIMEOUT, headers=headers).content
+    print(html)
     soup = BeautifulSoup(html, 'html5lib')
-
-    main_div = soup.find_all(class_="main_content")[0]
-    lines = main_div.find_all(("h1", "p", "ul"))
-    return lines
+    return soup.body.children
 
 def parse():
     '''
     parse the content lines
     '''
     # get content first
-    lines = get_main_part()
+    tags = get_main_part()
 
-    start_tag = False
-    # end_tag = False
+    started = False
     new_trunk = []
     trunks = defaultdict(list)
-    news_date = None
-    for line in lines:
-        l = str(line)
-        chk = try_release_line(l)
-        if chk :
-            if start_tag:
-                # this new tag is: 1 begining of new one 2 the one after end of old trunk
-                # end_tag = True
-                trunks[news_date].append(new_trunk)
-            news_date = chk[0]
-            # begin a new trunk
-            start_tag = True
-            # end_tag = False
-            new_trunk = [l]
-        else:
-            # not a new start, just append
-            new_trunk.append(l)
+    last_date = None
+    for tag in tags:
+        if tag.name == 'h2' and tag.has_attr('id') and tag['id'].startswith('section-'):
+            # the Month tag
+            continue
+        if tag.string and set([ c for c in tag.string ]) == {'\n'}:
+            # blank line
+            continue
+        if tag.name == 'h3':
+            new_date = parse_date_title(tag.string)
+            if new_date: # begining of a new message
+                if started:
+                    trunks[last_date].append(new_trunk)
+                started = True
+                last_date = new_date
+                new_trunk = [ str(tag) ]
+                continue
+        new_trunk.append(str(tag))
 
     result = []
     # make lines a plain list and give them index
     for date, newslist in trunks.items():
-        _dm, dd, dy = date
-        dm = M2D[_dm]
+        dm, dd, dy = date
         sl = len(newslist)
         for idx, news in enumerate(newslist):
             idx = '%d-%02d-%02d-%02d' % (int(dy), int(dm), int(dd), (sl-idx))
