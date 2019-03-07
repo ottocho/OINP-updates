@@ -24,8 +24,8 @@ from send_mail import send_mail, send_debug
 
 YEAR = datetime.datetime.now().year
 
-NEW_URL = 'https://www.ontario.ca/page/%d-ontario-immigrant-nominee-program-updates' % YEAR
-EMAIL_PREFIX = '<p><a target="_blank" href="%s">%s</a></p>' % (URL, URL)
+NEWS_URL = 'https://www.ontario.ca/page/%d-ontario-immigrant-nominee-program-updates' % YEAR
+EMAIL_PREFIX = '<p><a target="_blank" href="%s">%s</a></p>' % (NEWS_URL, NEWS_URL)
 
 ''' dir to store data '''
 DIR = 'db/'
@@ -100,21 +100,14 @@ def get_main_part():
     '''
     get the main part of the news website
     '''
-    # FIXME testing
-    '''
-    with open('./jj.json') as fobj:
-        value = json.loads(fobj.read())
-        content = value['body']['und'][0]['safe_value']
-        soup = BeautifulSoup(content, 'html5lib')
-        return soup.body.children
-    '''
-
     headers = {
         'User-Agent': USER_AGENT,
         'Accept': '*/*',
         'Content-Encoding': 'gzip',
     }
-    html = requests.get(DATA_SOURCE_URL, timeout=TIMEOUT, headers=headers).content
+    content = requests.get(DATA_SOURCE_URL, timeout=TIMEOUT, headers=headers).content
+    value = json.loads(content)
+    html = value['body']['und'][0]['safe_value']
     soup = BeautifulSoup(html, 'html5lib')
     return soup.body.children
 
@@ -133,9 +126,11 @@ def parse():
         if tag.name == 'h2' and tag.has_attr('id') and tag['id'].startswith('section-'):
             # the Month tag
             continue
-        if tag.string and set([ c for c in tag.string ]) == {'\n'}:
-            # blank line
-            continue
+        if tag.string:
+            # remove blank line
+            tag_string = re.sub(r'\s', '', tag.string)
+            if not tag_string:
+                continue
         if tag.name == 'h3':
             new_date = parse_date_title(tag.string)
             if new_date: # begining of a new message
