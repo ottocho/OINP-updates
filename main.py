@@ -105,8 +105,7 @@ def get_main_part():
         'Accept': '*/*',
         'Content-Encoding': 'gzip',
     }
-    content = requests.get(DATA_SOURCE_URL, timeout=TIMEOUT, headers=headers).content
-    value = json.loads(content)
+    value = requests.get(DATA_SOURCE_URL, timeout=TIMEOUT, headers=headers).json()
     html = value['body']['und'][0]['safe_value']
     soup = BeautifulSoup(html, 'html5lib')
     return soup.body.children
