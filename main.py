@@ -5,9 +5,7 @@
 Author:       ottocho
 Filename:     OINP-updates/main.py
 Date:         2019-03-07 10:18 PM
-Description:
-    HTTP request and split out the part of the lastest update of ONIP
-    send email if new ONIP update
+Description:  fetch news and send email
 """
 
 import os

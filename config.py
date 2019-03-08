@@ -5,10 +5,7 @@
 Author:       ottocho
 Filename:     OINP-updates/config.py
 Date:         2019-03-07 10:18 PM
-Description:
-
-    configuration
-
+Description:  configuration
 """
 
 from datetime import datetime

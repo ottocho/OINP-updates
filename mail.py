@@ -5,13 +5,8 @@
 Author:       ottocho
 Filename:     OINP-updates/mail.py
 Date:         2019-03-07 10:18 PM
-Description:
-
-send mail via sendgrid
-
+Description:  send mail via sendgrid
 """
-
-import os
 
 import sendgrid
 from sendgrid.helpers.mail import *
