@@ -24,19 +24,21 @@ git clone https://github.com/ottocho/OINP-updates
 cd OINP-updates
 
 #
-mkdir db private
+mkdir db
 
-# put SendGrid key in file
-echo 'YOUR_SEND_GRID_KEY' > private/SG_API_KEY
+# set config for email sending
+vim ./config.py
 
-# put send email address in file
-echo 'SEND_EMAIL@z.com' > private/SENDER
+    SG_API_KEY = 'YOUR_SEND_GRID_KEY'
 
-# put receiver email address in file
-echo 'RECVER_EMAIL@z.com' > private/RECVER
-
-# put debugger(developer) email address in file
-echo 'DEBUGGER_EMAIL@z.com' > private/DEBUGGER
+    EMAIL_RECVERS = [
+        'RECVER1@z.com',
+        'RECVER2@z.com',
+    ]
+    EMAIL_DEVS = [
+        'DEV@z.com',
+    ]
+    EMAIL_SENDER = 'SENDER@z.com'
 
 # run
 ./main.py
@@ -47,27 +49,3 @@ echo 'DEBUGGER_EMAIL@z.com' > private/DEBUGGER
 ```
 */5 *  *   *   *    cd /home/otto_cho/OINP-updates/ && TZ='America/New_York' python3 main.py >>run.log 2>&1
 ```
-
-## changes
-
-### Dec. 1, 2017
-
-* first stable version
-
-### Dec. 5, 2017
-
-* fix the email config error
-
-### Dec. 25, 2017
-
-* send debug information to debugger email
-
-### Dec. 06, 2018
-
-* fix datetime bug
-
-### Mar. 04, 2019
-
-* Due to the OINP service migration from [ontarioimmigration.ca](http://www.ontarioimmigration.ca/en/pnp/OI_PNPNEW.html) to [onratio.ca](https://www.ontario.ca/page/2019-ontario-immigrant-nominee-program-updates), this service is updated to use new their new data source.
-* Refactor the code base
-
