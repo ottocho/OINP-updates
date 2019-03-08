@@ -11,7 +11,9 @@ Description:  send mail via sendgrid
 import sendgrid
 from sendgrid.helpers.mail import *
 
-from config import *
+from config import SG_API_KEY, EMAIL_SENDER, EMAIL_RECVERS, EMAIL_DEVS
+if not (SG_API_KEY and EMAIL_SENDER and EMAIL_RECVERS and EMAIL_DEVS):
+    raise Exception('config error')
 
 def _send(subject, html, receivers):
     for email_recver in receivers:
