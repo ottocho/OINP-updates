@@ -2,7 +2,9 @@
 
 Send an email notification when there were any updates from OINP ([Ontario Immigrant Nominee Program](https://www.ontario.ca/page/2019-ontario-immigrant-nominee-program-updates))
 
-![Example Eamil](example-email.png)
+| Example Email |
+| ------------------------------------ |
+| ![Example Eamil](example-email.png)  | 
 
 Only support *Python3*.
 
