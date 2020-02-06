@@ -1,6 +1,10 @@
 # OINP-updates
 
-Send an email notification when there were any updates from OINP ([Ontario Immigrant Nominee Program](https://www.ontario.ca/page/2019-ontario-immigrant-nominee-program-updates))
+Send an email notification when there were any updates from OINP.
+
+Data source [Ontario Immigrant Nominee Program]:
+
+[https://www.ontario.ca/page/2020-ontario-immigrant-nominee-program-updates](https://www.ontario.ca/page/2020-ontario-immigrant-nominee-program-updates)
 
 | Example Email |
 | ------------------------------------ |
