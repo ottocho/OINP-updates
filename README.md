@@ -1,5 +1,7 @@
 # OINP-updates
 
+**This repository has been archived**.
+
 Send an email notification when there were any updates from OINP.
 
 Data source [Ontario Immigrant Nominee Program]:
@@ -8,7 +10,7 @@ Data source [Ontario Immigrant Nominee Program]:
 
 | Example Email |
 | ------------------------------------ |
-| ![Example Eamil](example-email.png)  | 
+| ![Example Eamil](example-email.png)  |
 
 Only support *Python3*.
 
